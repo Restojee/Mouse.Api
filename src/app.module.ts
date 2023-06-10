@@ -4,6 +4,7 @@ import { ConfigModule } from "@nestjs/config";
 import { DatabaseModule } from "./database/database.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { MediaService } from "./modules/media/media.service";
+import { MapModule } from "./modules/map/map.module";
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { MediaService } from "./modules/media/media.service";
     }),
     UserModule,
     MediaService,
-    AuthModule
+    AuthModule,
+    MapModule
   ],
   controllers: [],
   providers: [],
