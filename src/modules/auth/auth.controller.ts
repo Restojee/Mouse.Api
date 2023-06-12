@@ -13,20 +13,23 @@ export class AuthController {
 
   @Post('Login')
   @ApiOperation({ operationId: 'Login' })
-  async login(@Body() payload: LoginRequest) {
-    return await this.authService.login(payload);
+  async login(@Body() loginRequest: LoginRequest) {
+    const { username, password } = loginRequest;
+    return await this.authService.login({ username, password });
   }
 
   @Post('Register')
   @ApiOperation({ operationId: 'Register' })
-  async register(@Body() payload: RegisterRequest) {
-    return await this.authService.register(payload);
+  async register(@Body() registerRequest: RegisterRequest) {
+    const { password, username } = registerRequest;
+    return await this.authService.register({ password, username });
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('GetProfile')
   @ApiOperation({ operationId: 'GetProfile' })
   async getProfile(@Request() request) {
-    return await this.authService.getProfile(request.user);
+    const { id } = request.user;
+    return await this.authService.getProfile({ userId: id });
   }
 }

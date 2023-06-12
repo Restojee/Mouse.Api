@@ -14,6 +14,8 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
 
+  console.log(process.env.DATABASE_HOST)
+
   app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
