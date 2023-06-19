@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
-import { RegisterRequest } from './models/RegisterRequest';
-import { LoginRequest } from './models/LoginRequest';
+import { RegisterRequest } from './models/register-request';
+import { LoginRequest } from './models/login-request';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')

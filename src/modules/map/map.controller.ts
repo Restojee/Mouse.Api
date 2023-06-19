@@ -27,7 +27,7 @@ import { MapService } from './map.service';
 import { MapCreateRequest} from './models/map-create-request';
 import { MapUpdateRequest } from './models/map-update-request';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { MediaUpload } from '../media/models/MediaUpload';
+import { MediaUpload } from '../media/models/media-upload';
 import { imageStorage } from '../media/utils/imageStorage';
 import { MapsGetRequest } from './models/maps-get-request';
 import { Map } from './models/map';

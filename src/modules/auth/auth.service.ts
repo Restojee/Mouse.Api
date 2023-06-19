@@ -3,8 +3,8 @@ import {
   BadRequestException,
   UnauthorizedException
 } from '@nestjs/common';
-import { LoginRequest } from './models/LoginRequest';
-import { RegisterRequest } from './models/RegisterRequest';
+import { LoginRequest } from './models/login-request';
+import { RegisterRequest } from './models/register-request';
 import { Authorized } from './models/Authorized';
 import { JwtService } from '@nestjs/jwt';
 import {

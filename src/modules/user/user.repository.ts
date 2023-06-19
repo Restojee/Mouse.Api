@@ -3,7 +3,7 @@ import {
   Injectable
 } from '@nestjs/common';
 import { Repository } from "sequelize-typescript";
-import { CreateUserRequest } from "./models/CreateUserRequest";
+import { CreateUserRequest } from "./models/create-user-request";
 import { UserEntity } from "../../database/entities/user.entity";
 import {
   GetUserByIdArgs,
