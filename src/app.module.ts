@@ -16,6 +16,7 @@ import { TagModule } from "./modules/tag/tag.module";
     }),
     CommentModule,
     UserModule,
+    TagModule,
     MediaModule,
     AuthModule,
     MapModule
