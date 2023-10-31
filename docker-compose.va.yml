@@ -4,7 +4,7 @@ services:
     container_name: va-postgres
     image: postgres:15
     ports:
-      - "6061:5432"
+      - "6031:5432"
     env_file:
       - .docker.env
     volumes:
@@ -18,13 +18,13 @@ services:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: root1234
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "9030:9000"
+      - "9031:9001"
     restart: always
     working_dir: "/minio-image/storage"
     volumes:
       - ./Storage/minio/storage:/minio-image/storage
-    command: server /minio-image/storage --console-address :9001
+    command: server /minio-image/storage --console-address :9031
     networks:
       - app
 networks:

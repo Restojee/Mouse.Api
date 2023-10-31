@@ -1,5 +1,6 @@
   
-namespace Mouse.NET; 
+namespace Mouse.NET;
+using System.Net;
 
 public class Program
 {
@@ -14,5 +15,9 @@ public class Program
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
+                webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+                        serverOptions.Listen(IPAddress.Any, 8000); // Здесь настраиваем IP-адрес и порт
+                    });
             });
 }

@@ -1,37 +1,37 @@
 ﻿version: "3"
 services:
   postgres:
-    container_name: va-postgres
+    container_name: onlyplanks-va-postgres
     image: postgres:15
     ports:
-      - "6061:5432"
+      - "6031:5432"
     env_file:
       - .docker.env
     volumes:
-      - ../postgres-data:/var/lib/postgresql/data
+      - ../onlyplanks-postgres-data:/var/lib/postgresql/data
     networks:
       - app
   minio:
     image: minio/minio
-    container_name: minio-server
+    container_name: onlyplanks-minio-server
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: root1234
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "9030:9000"
+      - "9031:9001"
     restart: always
     working_dir: "/minio-image/storage"
     volumes:
-      - ./Storage/minio/storage:/minio-image/storage
-    command: server /minio-image/storage --console-address :9001
+      - ../onlyplanks-minio/storage:/minio-image/storage
+    command: server /minio-image/storage --console-address :9031
     networks:
       - app
   app:
     image: mcr.microsoft.com/dotnet/aspnet:6.0
-    container_name: mouse-maps-api
+    container_name: onlyplanks-mouse-maps-api
     ports:
-      - "8000:8000"
+      - "8030:8000"
     build:
       context: .
       dockerfile: Dockerfile
