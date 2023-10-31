@@ -14,4 +14,6 @@ public interface IUserService
     public Task<User> UpdateUser(UserUpdateRequest updateRequest);
 
     public Task<string> DeleteUser(int levelId);
+
+    public Task<User> UpdateMyAvatar(IFormFile file);
 }

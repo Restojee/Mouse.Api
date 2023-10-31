@@ -20,6 +20,9 @@ public class UserEntity : IdentityUser
     [Column("salt")]
     public byte[] Salt { get; set; }
     
+    [Column("avatar")]
+    public string? Avatar { get; set; }
+    
     public ICollection<LevelEntity> Levels { get; set; }
     public ICollection<LevelCommentEntity> Comments { get; set; }
     public ICollection<LevelNoteEntity> Notes { get; set; }

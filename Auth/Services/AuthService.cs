@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Mouse.NET.Auth.Models;
 using Mouse.NET.Data.Models;
+using Mouse.NET.Storage;
 using Mouse.NET.Users.Data;
 using Mouse.NET.Users.Models;
 using Mouse.Stick.Controllers.Auth;
@@ -19,7 +20,7 @@ public class AuthService: IAuthService
         this.mapper = mapper;
         this.jwtService = jwtService;
         this.usersRepository = usersRepository;
-        
+
     }
 
     public int GetAuthorizedUserId()
