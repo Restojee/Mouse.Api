@@ -13,6 +13,8 @@ public class LevelProfile : Profile
         CreateMap<LevelEntity, Level>();
         CreateMap<Level, LevelEntity>();
         CreateMap<LevelCreateRequest, LevelEntity>();
+        CreateMap<LevelNoteEntity, LevelNote>();
+        CreateMap<LevelNote, LevelNoteEntity>();
         CreateMap<PagedResult<LevelEntity>, PagedResult<Level>>();
         CreateMap<LevelCompleteRequest, LevelCompletedEntity>();
         CreateMap<LevelFavoriteRequest, LevelFavoriteEntity>();

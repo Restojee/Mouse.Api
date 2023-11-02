@@ -86,9 +86,30 @@ public class LevelService : ILevelService
     
     public async Task<Level> SetLevelTags(LevelTagsSetRequest request)
     {
-        return mapper.Map<LevelEntity, Level>(
-            await this.levelRepository.SetLevelTags(this.mapper.Map<Level, LevelEntity>(await this.GetLevelOrFail(request.LevelId)), request.TagIds)
-        );
+        var levelExists = this.mapper.Map<Level, LevelEntity>(await this.GetLevelOrFail(request.LevelId));
+        return mapper.Map<LevelEntity, Level>(await this.levelRepository.SetLevelTags(levelExists, request.TagIds));
+    }
+
+    public async Task<Level> SetLevelNote(LevelNoteSetRequest request)
+    {
+        await this.GetLevelOrFail(request.LevelId);
+        var userId = this.authService.GetAuthorizedUserId();
+        var levelNoteExists = await this.levelRepository.GetLevelNote(request.LevelId, userId);
+        if (levelNoteExists == null)
+        {
+            await this.levelRepository.CreateLevelNote(new LevelNoteEntity
+            {
+                UserId = userId,
+                LevelId = request.LevelId,
+                Text = request.Text
+            });
+        }
+        else
+        {
+            levelNoteExists.Text = request.Text;
+            await this.levelRepository.UpdateLevelNote(levelNoteExists);
+        }
+        return await this.GetLevel(request.LevelId);
     }
 
     public async Task CompleteLevel(int levelId, IFormFile file)

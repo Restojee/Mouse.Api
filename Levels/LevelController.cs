@@ -98,4 +98,11 @@ public class LevelController : ControllerBase
     {
         return await this.levelService.SetLevelTags(request);
     }
+    
+    [HttpPut("set-note")]
+    [Authorize]
+    public async Task<Level> SetLevelNote([FromBody] LevelNoteSetRequest request)
+    {
+        return await this.levelService.SetLevelNote(request);
+    }
 }

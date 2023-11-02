@@ -26,6 +26,8 @@ public class MouseDbContext : DbContext
     public DbSet<LevelVisitEntity> LevelVisits { get; set; }
     
     public DbSet<MessageEntity> Messages { get; set; }
+    
+    public DbSet<LevelNoteEntity> LevelNotes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
