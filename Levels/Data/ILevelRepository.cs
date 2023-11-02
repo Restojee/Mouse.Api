@@ -30,6 +30,12 @@ namespace Mouse.NET.Levels.Data
 
         public Task<LevelCompletedEntity?> GetCompletedLevel(int levelId, int userId);
 
+        public Task<LevelNoteEntity?> GetLevelNote(int levelId, int userId);
+
         public Task CreateLevelVisit(LevelVisitEntity visit);
+
+        public Task UpdateLevelNote(LevelNoteEntity note);
+
+        public Task CreateLevelNote(LevelNoteEntity note);
     }
 }

@@ -280,6 +280,29 @@ namespace Mouse.NET.Migrations
                     b.ToTable("level_visits");
                 });
 
+            modelBuilder.Entity("Mouse.NET.Data.Models.MessageEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("Mouse.NET.Data.Models.TagEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -366,6 +389,10 @@ namespace Mouse.NET.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("text")
+                        .HasColumnName("avatar");
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("text");
@@ -543,6 +570,17 @@ namespace Mouse.NET.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Level");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Mouse.NET.Data.Models.MessageEntity", b =>
+                {
+                    b.HasOne("Mouse.NET.Data.Models.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

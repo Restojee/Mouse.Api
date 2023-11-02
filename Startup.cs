@@ -15,6 +15,8 @@ using Mouse.NET.LevelComments.Data;
 using Mouse.NET.LevelComments.services;
 using Mouse.NET.Levels.Data;
 using Mouse.NET.Levels.services;
+using Mouse.NET.Messages.Data;
+using Mouse.NET.Messages.services;
 using Mouse.NET.Storage;
 using Mouse.NET.Tags.Data;
 using Mouse.NET.Tags.services;
@@ -129,5 +131,7 @@ namespace Mouse.NET;
             services.AddTransient<JwtService>();
             services.AddScoped<IMinioService, MinioService>();
             services.AddScoped<IStorageService, StorageService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
         }
     }

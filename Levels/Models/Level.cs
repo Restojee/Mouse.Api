@@ -18,6 +18,8 @@ public class Level: Auditable
     
     public ICollection<Tag> Tags { get; set; }
     
+    public ICollection<LevelNote> Notes { get; set; }
+    
     public int CommentsCount { get; set; }
     
     public int CompletedCount { get; set; }

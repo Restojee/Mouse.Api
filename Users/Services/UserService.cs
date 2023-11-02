@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Mouse.NET.Common;
 using Mouse.NET.Data.Models;
+using Mouse.NET.Storage;
 using Mouse.NET.Users.Data;
 using Mouse.NET.Users.Models;
+using Mouse.Stick.Controllers.Auth;
 
 namespace Mouse.NET.Users.services;
 
@@ -10,12 +12,15 @@ public class UserService : IUserService
 {
     
     private readonly IMapper mapper;
-    
-    private IUserRepository userRepository;
+    private readonly IUserRepository userRepository;
+    private readonly IStorageService storageService;
+    private readonly IAuthService authService;
 
-    public UserService(IMapper mapper, IUserRepository userRepository) {
+    public UserService(IMapper mapper, IUserRepository userRepository, IStorageService storageService, IAuthService authService) {
         this.userRepository = userRepository;
+        this.storageService = storageService;
         this.mapper = mapper;
+        this.authService = authService;
     }
     
     public async Task<PagedResult<User>> GetUserCollection(UserCollectionGetRequest request)
@@ -57,5 +62,12 @@ public class UserService : IUserService
         }
         await this.userRepository.DeleteUser(userExists);
         return "Ok";
+    }
+    
+    public async Task<User> UpdateMyAvatar(IFormFile file)
+    {
+        var user = await this.userRepository.GetUser(this.authService.GetAuthorizedUserId());
+        user.Avatar = await this.storageService.Upload(file);
+        return this.mapper.Map<UserEntity, User>(await this.userRepository.UpdateUser(user));
     }
 }

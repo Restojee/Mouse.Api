@@ -18,6 +18,8 @@ public interface ILevelService
 
     public Task<Level> SetLevelTags(LevelTagsSetRequest request);
 
+    public Task<Level> SetLevelNote(LevelNoteSetRequest request);
+
     public Task CompleteLevel(int levelId, IFormFile file);
 
     public Task UnCompleteLevel(int levelId);

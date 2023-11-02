@@ -41,6 +41,13 @@ public class UserController : ControllerBase
     {
         return await this.userService.GetUser(this.authService.GetAuthorizedUserId());
     }
+
+    [Authorize]
+    [HttpPost("update-my-avatar")]
+    public async Task<User> UpdateMyAvatar(IFormFile file)
+    {
+        return await this.userService.UpdateMyAvatar(file);
+    }
     
     // [HttpPut]
     // public async Task<User> UpdateUser([FromBody] UserUpdateRequest updateRequest)

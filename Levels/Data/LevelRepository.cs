@@ -24,7 +24,8 @@ public class LevelRepository : ILevelRepository
             .Include(level => level.Completed)
             .Include(level => level.Favorites)
             .Include(level => level.Visits)
-            .AsQueryable();;
+            .Include(level => level.Notes)
+            .AsQueryable();
 
         if (request.IsCompleted != null)
         {
@@ -70,6 +71,7 @@ public class LevelRepository : ILevelRepository
            .Include(level => level.Completed)
            .Include(level => level.Favorites)
            .Include(level => level.Visits)
+           .Include(level => level.Notes)
            .FirstOrDefaultAsync(level => level.Id.Equals(levelId));
        
        level.IsCompletedByUser = level.Completed.Any(c => c.UserId == userId.GetValueOrDefault());
@@ -84,7 +86,7 @@ public class LevelRepository : ILevelRepository
 
     public async Task<LevelEntity?> CreateLevel(LevelEntity level)
     {
-        await this.context.Levels.AddAsync(level);
+        this.context.Levels.Add(level);
         await this.context.SaveChangesAsync();
         
         return await this.GetLevel(level.Id);
@@ -106,9 +108,7 @@ public class LevelRepository : ILevelRepository
     
     public async Task ClearLevelTags(int levelId)
     {
-        this.context.LevelTagRelations.RemoveRange(
-            this.context.LevelTagRelations.Where(relation => levelId == relation.LevelId)
-        );
+        this.context.LevelTagRelations.RemoveRange(this.context.LevelTagRelations.Where(relation => levelId == relation.LevelId));
         await this.context.SaveChangesAsync();
     }
 
@@ -117,7 +117,7 @@ public class LevelRepository : ILevelRepository
         await ClearLevelTags(level.Id);
         foreach (var tagId in tagIds)
         {
-            await this.context.LevelTagRelations.AddAsync(new LevelTagRelation
+            this.context.LevelTagRelations.Add(new LevelTagRelation
             {
                 TagId = tagId,
                 LevelId = level.Id
@@ -125,6 +125,25 @@ public class LevelRepository : ILevelRepository
         }
         await this.context.SaveChangesAsync();
         return await this.GetLevel(level.Id);
+    }
+
+    public async Task<LevelNoteEntity?> GetLevelNote(int levelId, int userId)
+    {
+        return await this.context.LevelNotes
+            .Where(note => note.Level.Id == levelId && note.User.Id == userId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task UpdateLevelNote(LevelNoteEntity note)
+    {
+        this.context.Entry(note).State = EntityState.Modified;
+        await this.context.SaveChangesAsync();
+    }
+    
+    public async Task CreateLevelNote(LevelNoteEntity note)
+    {
+        this.context.LevelNotes.Add(note);
+        await this.context.SaveChangesAsync();
     }
     
     public async Task CompleteLevel(LevelCompletedEntity completed)
