@@ -2,6 +2,7 @@
 using Mouse.NET.Data.Models;
 using Mouse.NET.Tags.Data;
 using Mouse.NET.Tags.Models;
+using Mouse.Stick.Controllers.Auth;
 
 namespace Mouse.NET.Tags.services;
 
@@ -9,8 +10,8 @@ public class TagService : ITagService
 {
     
     private readonly IMapper mapper;
-    
-    private ITagRepository tagRepository;
+    private readonly IAuthService authService;
+    private readonly ITagRepository tagRepository;
 
     public TagService(IMapper mapper, ITagRepository tagRepository) {
         this.tagRepository = tagRepository;
@@ -34,7 +35,12 @@ public class TagService : ITagService
         {
             throw new BadHttpRequestException("Тег с таким именем уже существует");
         }
-        return mapper.Map<TagEntity, Tag>(await this.tagRepository.CreateTag(mapper.Map<TagCreateRequest, TagEntity>(request)));
+        return mapper.Map<TagEntity, Tag>(await this.tagRepository.CreateTag(new TagEntity
+        {
+            Description = request.Description,
+            Name = request.Name,
+            UserId = this.authService.GetAuthorizedUserId()
+        }));
     }
 
     public async Task<Tag> UpdateTag(TagUpdateRequest request)

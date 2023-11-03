@@ -6,6 +6,11 @@ namespace Mouse.NET.Levels.Data;
 
 public static class LevelRepositoryFilters
 {
+    public static IQueryable<LevelEntity> GetFilterByUserQuery(IQueryable<LevelEntity> query, int userId)
+    {
+        return query.Where(level => level.User.Id == userId);
+    }
+    
     public static IQueryable<LevelEntity> GetFilterByCompletedQuery(MouseDbContext context, IQueryable<LevelEntity> query, int userId, bool isCompleted)
     {
         if (isCompleted) {

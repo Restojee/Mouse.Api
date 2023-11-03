@@ -11,44 +11,44 @@ namespace Mouse.NET.Tips;
 public class TipController : ControllerBase
 {
     
-    private readonly ITipService tagService;
+    private readonly ITipService tipService;
 
-    public TipController(ITipService tagService)
+    public TipController(ITipService tipService)
     {
-        this.tagService = tagService;
+        this.tipService = tipService;
     }
 
-    [HttpGet("collect")]
     [Authorize]
-    public async Task<PagedResult<Tip>> GetTipCollection(PaginateRequest request)
+    [HttpGet("collect")]
+    public async Task<PagedResult<Tip>> GetTipCollection([FromQuery] PaginateRequest request)
     {
-        return await this.tagService.GetTipCollection(request);
+        return await this.tipService.GetTipCollection(request);
     }
 
-    [HttpGet("{tagId}")]
-    public async Task<Tip> GetTip([FromRoute] int tagId)
+    [HttpGet("{tipId}")]
+    public async Task<Tip> GetTip([FromRoute] int tipId)
     {
-        return await this.tagService.GetTip(tagId);
+        return await this.tipService.GetTip(tipId);
     }
     
-    [HttpPut]
-    [Authorize("update")]
+    [Authorize]
+    [HttpPut("update")]
     public async Task<Tip> UpdateTip([FromBody] TipUpdateRequest updateRequest)
     {
-        return await this.tagService.UpdateTip(updateRequest);
+        return await this.tipService.UpdateTip(updateRequest);
     }
     
-    [HttpPost("create")]
     [Authorize]
+    [HttpPost("create")]
     public async Task<Tip> CreateTip([FromBody] TipCreateRequest createRequest)
     {
-        return await this.tagService.CreateTip(createRequest);
+        return await this.tipService.CreateTip(createRequest);
     }
     
-    [HttpDelete("delete/{tagId}")]
+    [HttpDelete("delete/{tipId}")]
     [Authorize]
-    public async Task<string> DeleteTips([FromRoute] int tagId)
+    public async Task<string> DeleteTips([FromRoute] int tipId)
     {
-        return await this.tagService.DeleteTip(tagId);
+        return await this.tipService.DeleteTip(tipId);
     }
 }

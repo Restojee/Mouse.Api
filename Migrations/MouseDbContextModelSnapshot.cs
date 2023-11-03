@@ -194,7 +194,6 @@ namespace Mouse.NET.Migrations
                         .HasColumnName("description");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("image");
 

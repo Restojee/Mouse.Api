@@ -19,14 +19,18 @@ public class LevelRepository : ILevelRepository
     {
         var query = this.context.Levels
             .Include(level => level.User)
-            .Include(level => level.Comments)
             .Include(level => level.Tags)
+            .Include(level => level.Comments)
             .Include(level => level.Completed)
             .Include(level => level.Favorites)
             .Include(level => level.Visits)
-            .Include(level => level.Notes)
             .AsQueryable();
 
+        if (request.UserId != null)
+        {
+            query = LevelRepositoryFilters.GetFilterByUserQuery(query, request.UserId.GetValueOrDefault());
+        }
+        
         if (request.IsCompleted != null)
         {
             query = LevelRepositoryFilters.GetFilterByCompletedQuery(this.context, query, request.UserId.GetValueOrDefault(), request.IsCompleted.GetValueOrDefault());
@@ -69,17 +73,21 @@ public class LevelRepository : ILevelRepository
            .Include(level => level.Comments)
            .Include(level => level.Tags)
            .Include(level => level.Completed)
+           .ThenInclude(completed => completed.User)
            .Include(level => level.Favorites)
            .Include(level => level.Visits)
-           .Include(level => level.Notes)
+           .Include(level => level.Notes.Where(note => note.User.Id == userId))
            .FirstOrDefaultAsync(level => level.Id.Equals(levelId));
-       
-       level.IsCompletedByUser = level.Completed.Any(c => c.UserId == userId.GetValueOrDefault());
-       level.IsFavoriteByUser = level.Favorites.Any(f => f.UserId == userId.GetValueOrDefault());
-       level.CompletedCount = level.Completed.Count;
-       level.FavoritesCount = level.Favorites.Count;
-       level.CommentsCount = level.Comments.Count;
-       level.VisitsCount = level.Visits.Count;
+
+        if (level != null)
+        {
+            level.IsCompletedByUser = level.Completed.Any(c => c.UserId == userId.GetValueOrDefault());
+            level.IsFavoriteByUser = level.Favorites.Any(f => f.UserId == userId.GetValueOrDefault());
+            level.CompletedCount = level.Completed.Count;
+            level.FavoritesCount = level.Favorites.Count;
+            level.CommentsCount = level.Comments.Count;
+            level.VisitsCount = level.Visits.Count;
+        }
 
        return level;
     }
@@ -117,11 +125,11 @@ public class LevelRepository : ILevelRepository
         await ClearLevelTags(level.Id);
         foreach (var tagId in tagIds)
         {
-            this.context.LevelTagRelations.Add(new LevelTagRelation
+            var tagExists = await this.context.Tags.Where(tag => tag.Id == tagId).FirstOrDefaultAsync();
+            if (tagExists != null)
             {
-                TagId = tagId,
-                LevelId = level.Id
-            });
+                await this.context.LevelTagRelations.AddAsync(new LevelTagRelation { TagId = tagId, LevelId = level.Id });
+            }
         }
         await this.context.SaveChangesAsync();
         return await this.GetLevel(level.Id);
@@ -142,13 +150,13 @@ public class LevelRepository : ILevelRepository
     
     public async Task CreateLevelNote(LevelNoteEntity note)
     {
-        this.context.LevelNotes.Add(note);
+        await this.context.LevelNotes.AddAsync(note);
         await this.context.SaveChangesAsync();
     }
     
     public async Task CompleteLevel(LevelCompletedEntity completed)
     {
-        this.context.LevelCompleted.Add(completed);
+        await this.context.LevelCompleted.AddAsync(completed);
         await this.context.SaveChangesAsync();
     }
     
@@ -160,7 +168,7 @@ public class LevelRepository : ILevelRepository
     
     public async Task FavoriteLevel(LevelFavoriteEntity favorite)
     {
-        this.context.LevelFavorites.Add(favorite);
+        await this.context.LevelFavorites.AddAsync(favorite);
         await this.context.SaveChangesAsync();
     }
     
@@ -172,21 +180,17 @@ public class LevelRepository : ILevelRepository
     
     public async Task<LevelFavoriteEntity?> GetFavoriteLevel(int levelId, int userId)
     {
-        return await this.context.LevelFavorites.Where(
-            favorite => favorite.LevelId == levelId && favorite.UserId == userId
-        ).FirstOrDefaultAsync();
+        return await this.context.LevelFavorites.Where(favorite => favorite.LevelId == levelId && favorite.UserId == userId).FirstOrDefaultAsync();
     }
     
     public async Task<LevelCompletedEntity?> GetCompletedLevel(int levelId, int userId)
     {
-        return await this.context.LevelCompleted.Where(
-            favorite => favorite.LevelId == levelId && favorite.UserId == userId
-        ).FirstOrDefaultAsync();
+        return await this.context.LevelCompleted.Where(favorite => favorite.LevelId == levelId && favorite.UserId == userId).FirstOrDefaultAsync();
     }
     
     public async Task CreateLevelVisit(LevelVisitEntity visit)
     {
-        this.context.LevelVisits.Add(visit);
+        await this.context.LevelVisits.AddAsync(visit);
         await this.context.SaveChangesAsync();
     }
 }

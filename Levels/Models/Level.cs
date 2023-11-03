@@ -1,4 +1,5 @@
 ﻿using Mouse.NET.Common;
+using Mouse.NET.Levels.dto;
 using Mouse.NET.Tags.Models;
 using Mouse.NET.Users.Models;
 
@@ -19,6 +20,8 @@ public class Level: Auditable
     public ICollection<Tag> Tags { get; set; }
     
     public ICollection<LevelNote> Notes { get; set; }
+    
+    public ICollection<LevelCompleted> Completed { get; set; }
     
     public int CommentsCount { get; set; }
     

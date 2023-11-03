@@ -17,7 +17,7 @@ public class Program
                 webBuilder.UseStartup<Startup>();
                 webBuilder.ConfigureKestrel(serverOptions =>
                     {
-                        serverOptions.Listen(IPAddress.Any, 8000); // Здесь настраиваем IP-адрес и порт
+                        serverOptions.Listen(IPAddress.Any, 8000);
                     });
             });
 }

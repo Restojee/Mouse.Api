@@ -39,7 +39,7 @@ public class AuthService: IAuthService
 
         var hashSalt = AuthUtils.GetHashPassword(registerAccountRequest.Password);
 
-        var user = await this.usersRepository.CreateUser(new UserEntity
+        var newUser = await this.usersRepository.CreateUser(new UserEntity
         {
             UserName = registerAccountRequest.UserName,
             PasswordHash = hashSalt.Hash,
@@ -48,8 +48,8 @@ public class AuthService: IAuthService
 
         return new Account 
         {
-            User = this.mapper.Map<UserEntity, User>(user),
-            AccessToken = JwtUtils.GenerateJwtToken(AuthUtils.GetUserClaims(userExists.Id, userExists.UserName, userExists.Email))
+            User = this.mapper.Map<UserEntity, User>(newUser),
+            AccessToken = JwtUtils.GenerateJwtToken(AuthUtils.GetUserClaims(newUser.Id, newUser.UserName, newUser.Email))
         };
     }
     

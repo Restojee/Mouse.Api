@@ -40,11 +40,13 @@ namespace Mouse.NET;
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
+            services.AddCors();
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
-                builder.WithOrigins("http://127.0.0.1")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
+                builder
+                    .WithOrigins(this.configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>())
+                    .WithMethods(this.configuration.GetSection("CorsSettings:AllowedMethods").Get<string[]>())
+                    .WithHeaders(this.configuration.GetSection("CorsSettings:AllowedHeaders").Get<string[]>());
             }));
             services.AddSingleton<IMemoryCache, MemoryCache>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

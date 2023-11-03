@@ -11,9 +11,7 @@ public class LevelCommentService : ILevelCommentService
 {
     
     private readonly IMapper mapper;
-
     private readonly IAuthService authService;
-    
     private readonly ILevelCommentRepository levelCommentRepository;
 
     public LevelCommentService(IMapper mapper, ILevelCommentRepository levelCommentRepository, IAuthService authService) {

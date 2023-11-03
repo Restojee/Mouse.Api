@@ -16,7 +16,7 @@ public class LevelEntity : AuditableEntity
     public string Description { get; set; }
     
     [Column("image")]
-    public string Image { get; set; }
+    public string? Image { get; set; }
 
     [Column("user_id")]
     [ForeignKey("User")]
