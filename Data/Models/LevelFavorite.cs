@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Mouse.NET.Data.Models;
 
-[Table("maps_favorites")]
+[Table("levels_favorites")]
 public class LevelFavoriteEntity : AuditableEntity
 {
     [Key]

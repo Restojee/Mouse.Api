@@ -13,8 +13,10 @@ public class TagService : ITagService
     private readonly IAuthService authService;
     private readonly ITagRepository tagRepository;
 
-    public TagService(IMapper mapper, ITagRepository tagRepository) {
+    public TagService(IMapper mapper, ITagRepository tagRepository, IAuthService authService)
+    {
         this.tagRepository = tagRepository;
+        this.authService = authService;
         this.mapper = mapper;
     }
     
@@ -35,12 +37,14 @@ public class TagService : ITagService
         {
             throw new BadHttpRequestException("Тег с таким именем уже существует");
         }
-        return mapper.Map<TagEntity, Tag>(await this.tagRepository.CreateTag(new TagEntity
+
+        var newTag = new TagEntity
         {
             Description = request.Description,
             Name = request.Name,
             UserId = this.authService.GetAuthorizedUserId()
-        }));
+        };
+        return mapper.Map<TagEntity, Tag>(await this.tagRepository.CreateTag(newTag));
     }
 
     public async Task<Tag> UpdateTag(TagUpdateRequest request)

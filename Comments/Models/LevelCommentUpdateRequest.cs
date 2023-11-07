@@ -4,5 +4,5 @@ public class LevelCommentUpdateRequest
 {
     public int Id { get; set; }
     
-    public int Text { get; set; }
+    public string Text { get; set; }
 }

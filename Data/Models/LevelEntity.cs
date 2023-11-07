@@ -13,7 +13,7 @@ public class LevelEntity : AuditableEntity
     public string Name { get; set; }
     
     [Column("description")]
-    public string Description { get; set; }
+    public string? Description { get; set; }
     
     [Column("image")]
     public string? Image { get; set; }

@@ -21,7 +21,7 @@ public class TipRepository : ITipRepository
     
     public async Task<TipEntity?> GetTip(int levelId)
     { 
-       return await this.context.Tips.FirstOrDefaultAsync(level => level.Id.Equals(levelId));
+       return await this.context.Tips.Include(tip => tip.User).FirstOrDefaultAsync(level => level.Id.Equals(levelId));
     }
 
     public async Task<TipEntity?> CreateTip(TipEntity level)

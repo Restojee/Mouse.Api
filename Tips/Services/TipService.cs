@@ -1,20 +1,24 @@
 ﻿using AutoMapper;
 using Mouse.NET.Common;
 using Mouse.NET.Data.Models;
+using Mouse.NET.Tags.Data;
 using Mouse.NET.Tips.Data;
 using Mouse.NET.Tips.Models;
+using Mouse.Stick.Controllers.Auth;
 
 namespace Mouse.NET.Tips.services;
 
 public class TipService : ITipService
 {
-    
-    private readonly IMapper mapper;
-    
-    private ITipRepository tipRepository;
 
-    public TipService(IMapper mapper, ITipRepository tipRepository) {
+    private readonly IMapper mapper;
+    private readonly IAuthService authService;
+    private readonly ITipRepository tipRepository;
+
+    public TipService(IMapper mapper, ITipRepository tipRepository, IAuthService authService)
+    {
         this.tipRepository = tipRepository;
+        this.authService = authService;
         this.mapper = mapper;
     }
     
@@ -30,13 +34,18 @@ public class TipService : ITipService
 
     public async Task<Tip> CreateTip(TipCreateRequest request)
     {
-        return mapper.Map<TipEntity, Tip>(await this.tipRepository.CreateTip(mapper.Map<TipCreateRequest, TipEntity>(request)));
+        return mapper.Map<TipEntity, Tip>(await this.tipRepository.CreateTip(new TipEntity
+        {
+            UserId = this.authService.GetAuthorizedUserId(),
+            Title = request.Title,
+            Text = request.Text,
+        }));
     }
 
     public async Task<Tip> UpdateTip(TipUpdateRequest request)
     {
         var tipExists = await this.tipRepository.GetTip(request.Id);
-        if (tipExists == null)
+        if (tipExists.User.Id != this.authService.GetAuthorizedUserId())
         {
             throw new BadHttpRequestException("Запрашиваемая информация не найдена");
         }
@@ -46,7 +55,7 @@ public class TipService : ITipService
     public async Task<string> DeleteTip(int tipId)
     {
         var tipExists = await this.tipRepository.GetTip(tipId);
-        if (tipExists == null)
+        if (tipExists.User.Id != this.authService.GetAuthorizedUserId())
         {
             throw new BadHttpRequestException("Запрашиваемая информация не найдена");
         }
