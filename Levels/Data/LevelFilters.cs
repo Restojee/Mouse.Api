@@ -30,7 +30,11 @@ public static class LevelRepositoryFilters
     
     public static IQueryable<LevelEntity> GetFilterByTags(IQueryable<LevelEntity> query, long[] tagIds)
     {
-        return query.Where(map => map.Tags.All(tag => tagIds.Contains(tag.Id)));
+        foreach (int tagId in tagIds)
+        {
+            query = query.Where(level => level.Tags.Any(tag => tag.Id == tagId));
+        }
+        return query;
     }
     
     public static IQueryable<LevelEntity> GetFilterByName(IQueryable<LevelEntity> query, string name)

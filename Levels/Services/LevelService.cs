@@ -103,7 +103,7 @@ public class LevelService : ILevelService
             levelNoteExists.Text = request.Text;
             await this.levelRepository.UpdateLevelNote(levelNoteExists);
         }
-        return await this.GetLevel(request.LevelId);
+        return mapper.Map<LevelEntity, Level>(await this.levelRepository.GetLevel(request.LevelId, userId));
     }
 
     public async Task CompleteLevel(int levelId, IFormFile file)
