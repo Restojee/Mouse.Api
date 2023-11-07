@@ -9,4 +9,12 @@ public class User : Auditable
     public string Avatar { get; set; }
     
     public string Username { get; set; }
+    
+    public int LevelsCount { get; set; }
+    
+    public int CompletedCount { get; set; }
+    
+    public int CommentsCount { get; set; }
+    
+    public int FavoritesCount { get; set; }
 }

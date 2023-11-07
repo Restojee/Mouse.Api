@@ -17,7 +17,7 @@ namespace Mouse.NET.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -54,7 +54,7 @@ namespace Mouse.NET.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("maps_favorites");
+                    b.ToTable("levels_favorites");
                 });
 
             modelBuilder.Entity("LevelNoteEntity", b =>
@@ -189,7 +189,6 @@ namespace Mouse.NET.Migrations
                         .HasColumnName("created_utc_date");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("description");
 
@@ -289,7 +288,8 @@ namespace Mouse.NET.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("text");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
@@ -299,7 +299,7 @@ namespace Mouse.NET.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("messages");
                 });
 
             modelBuilder.Entity("Mouse.NET.Data.Models.TagEntity", b =>
@@ -316,7 +316,6 @@ namespace Mouse.NET.Migrations
                         .HasColumnName("created_utc_date");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("description");
 

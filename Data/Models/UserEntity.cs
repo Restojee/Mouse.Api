@@ -30,4 +30,16 @@ public class UserEntity : IdentityUser
     public ICollection<LevelCompletedEntity> Completed { get; set; }
     public ICollection<LevelFavoriteEntity> Favorites { get; set; }
     
+    [NotMapped]
+    public int LevelsCount { get; set; }
+    
+    [NotMapped]
+    public int CompletedCount { get; set; }
+    
+    [NotMapped]
+    public int CommentsCount { get; set; }
+    
+    [NotMapped]
+    public int FavoritesCount { get; set; }
+    
 }
