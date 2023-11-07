@@ -17,14 +17,25 @@ public class LevelRepository : ILevelRepository
     
     public async Task<PagedResult<LevelEntity>> GetLevelCollection(LevelCollectionGetRequest request)
     {
+        var userId = request.UserId.GetValueOrDefault();
         var query = this.context.Levels
-            .Include(level => level.User)
-            .Include(level => level.Tags)
-            .Include(level => level.Comments)
-            .Include(level => level.Completed)
-            .Include(level => level.Favorites)
-            .Include(level => level.Visits)
-            .AsQueryable();
+            .Select(level => new LevelEntity
+            {
+                Id = level.Id,
+                Description = level.Description,
+                Name = level.Name,
+                User = level.User,
+                Tags = level.Tags,
+                CompletedCount = level.Completed.Count,
+                VisitsCount = level.Visits.Count,
+                FavoritesCount = level.Favorites.Count,
+                CommentsCount = level.Comments.Count,
+                CreatedUtcDate = level.CreatedUtcDate,
+                ModifiedUtcDate = level.ModifiedUtcDate,
+                IsCompletedByUser = level.Completed.Select(c => c.User.Id).Any(user => user == userId),
+                IsFavoriteByUser = level.Favorites.Select(f => f.User.Id).Any(user => user == userId),
+                Image = level.Image,
+            });
 
         if (request.UserId != null)
         {
@@ -52,44 +63,33 @@ public class LevelRepository : ILevelRepository
         }
 
         var levels = await PaginationExtensions.ToPagedResult(query, request.Page, request.Size);
-        
-        foreach (var level in levels.Records)
-        {
-            level.IsCompletedByUser = level.Completed.Any(c => c.UserId == request.UserId.GetValueOrDefault());
-            level.IsFavoriteByUser = level.Favorites.Any(f => f.UserId == request.UserId.GetValueOrDefault());
-            level.CompletedCount = level.Completed.Count;
-            level.FavoritesCount = level.Favorites.Count;
-            level.CommentsCount = level.Comments.Count;
-            level.VisitsCount = level.Visits.Count;
-        }
 
         return levels;
     }
     
     public async Task<LevelEntity?> GetLevel(int levelId, int? userId = null)
     {
-        var level =  await this.context.Levels 
-           .Include(level => level.User)
-           .Include(level => level.Comments)
-           .Include(level => level.Tags)
-           .Include(level => level.Completed)
-           .ThenInclude(completed => completed.User)
-           .Include(level => level.Favorites)
-           .Include(level => level.Visits)
-           .Include(level => level.Notes.Where(note => note.User.Id == userId))
-           .FirstOrDefaultAsync(level => level.Id.Equals(levelId));
-
-        if (level != null)
-        {
-            level.IsCompletedByUser = level.Completed.Any(c => c.UserId == userId.GetValueOrDefault());
-            level.IsFavoriteByUser = level.Favorites.Any(f => f.UserId == userId.GetValueOrDefault());
-            level.CompletedCount = level.Completed.Count;
-            level.FavoritesCount = level.Favorites.Count;
-            level.CommentsCount = level.Comments.Count;
-            level.VisitsCount = level.Visits.Count;
-        }
-
-       return level;
+        return await this.context.Levels
+            .Select(level => new LevelEntity
+            {
+                Id = level.Id,
+                Description = level.Description,
+                Name = level.Name,
+                User = level.User,
+                Tags = level.Tags,
+                CreatedUtcDate = level.CreatedUtcDate,
+                ModifiedUtcDate = level.ModifiedUtcDate,
+                Notes = level.Notes.Where(note => note.User.Id == userId.GetValueOrDefault()).ToList(),
+                CompletedCount = level.Completed.Select(c => c.Id).ToList().Count,
+                VisitsCount = level.Visits.Select(v => v.Id).ToList().Count,
+                FavoritesCount = level.Favorites.Select(f => f.Id).ToList().Count,
+                CommentsCount = level.Comments.Select(c => c.Id).ToList().Count,
+                IsCompletedByUser = level.Completed.Select(c => c.User.Id).Any(user => user == userId),
+                IsFavoriteByUser = level.Favorites.Select(f => f.User.Id).Any(user => user == userId),
+                Image = level.Image,
+            })
+            .Where(level => level.Id == levelId)
+            .FirstOrDefaultAsync();
     }
 
     public async Task<LevelEntity?> CreateLevel(LevelEntity level)
