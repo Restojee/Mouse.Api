@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Mouse.NET.Auth.Services;
 using Mouse.NET.Common;
 using Mouse.NET.Data.Models;
 using Mouse.NET.Messages.Data;
@@ -34,7 +33,7 @@ public class MessageService : IMessageService
     public async Task<Message> CreateMessage(MessageCreateRequest request)
     {
         var comment = mapper.Map<MessageCreateRequest, MessageEntity>(request);
-        comment.UserId = this.authService.GetAuthorizedUserId();
+        comment.UserId = this.authService.GetAuthorizedUserId().GetValueOrDefault();
         return mapper.Map<MessageEntity, Message>(await this.messageRepository.CreateMessage(comment));
     }
 

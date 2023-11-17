@@ -39,7 +39,7 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<User> GetCurrentUser()
     {
-        return await this.userService.GetUser(this.authService.GetAuthorizedUserId());
+        return await this.userService.GetUser(this.authService.GetAuthorizedUserId().GetValueOrDefault());
     }
 
     [Authorize]

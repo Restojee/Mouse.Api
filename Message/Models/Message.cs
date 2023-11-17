@@ -10,4 +10,8 @@ public class Message : Auditable
     public string Text { get; set; }
     
     public User user { get; set; }
+    
+    public DateTime? CreatedUtcDate { get; set; } = DateTime.UtcNow;
+    
+    public DateTime? ModifiedUtcDate { get; set; } = DateTime.UtcNow;
 }

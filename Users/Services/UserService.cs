@@ -66,7 +66,7 @@ public class UserService : IUserService
     
     public async Task<User> UpdateMyAvatar(IFormFile file)
     {
-        var user = await this.userRepository.GetUser(this.authService.GetAuthorizedUserId());
+        var user = await this.userRepository.GetUser(this.authService.GetAuthorizedUserId().GetValueOrDefault());
         user.Avatar = await this.storageService.Upload(file);
         return this.mapper.Map<UserEntity, User>(await this.userRepository.UpdateUser(user));
     }

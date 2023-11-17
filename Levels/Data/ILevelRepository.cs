@@ -8,7 +8,7 @@ namespace Mouse.NET.Levels.Data
     {
         public Task<PagedResult<LevelEntity>> GetLevelCollection(LevelCollectionGetRequest request);
         
-        public Task<LevelEntity> GetLevel(int levelId, int? userId = null);
+        public Task<LevelEntity?> GetLevel(int levelId, int? userId = null);
         
         public Task<LevelEntity> CreateLevel(LevelEntity level);
         

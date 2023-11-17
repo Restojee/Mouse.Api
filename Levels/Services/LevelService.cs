@@ -38,14 +38,14 @@ public class LevelService : ILevelService
         {
             throw new BadHttpRequestException("Запрашиваемая карта не найдена");
         }
-        await this.levelRepository.CreateLevelVisit(new LevelVisitEntity { LevelId = levelId, UserId = userId });
+        await this.levelRepository.CreateLevelVisit(new LevelVisitEntity { LevelId = levelId, UserId = userId  });
         return levelExists;
     }
 
     public async Task<Level> CreateLevel(LevelCreateRequest request)
     {
         var level = mapper.Map<LevelCreateRequest, LevelEntity>(request);
-        level.UserId = this.authService.GetAuthorizedUserId();
+        level.UserId = this.authService.GetAuthorizedUserId().GetValueOrDefault();
         return mapper.Map<LevelEntity, Level>(await this.levelRepository.CreateLevel(level));
     }
 
@@ -88,12 +88,12 @@ public class LevelService : ILevelService
             throw new BadHttpRequestException("Запрашиваемая карта не найдена");
         }
         var userId = this.authService.GetAuthorizedUserId();
-        var levelNoteExists = await this.levelRepository.GetLevelNote(request.LevelId, userId);
+        var levelNoteExists = await this.levelRepository.GetLevelNote(request.LevelId, userId.GetValueOrDefault());
         if (levelNoteExists == null)
         {
             await this.levelRepository.CreateLevelNote(new LevelNoteEntity
             {
-                UserId = userId,
+                UserId = userId.GetValueOrDefault(),
                 LevelId = request.LevelId,
                 Text = request.Text
             });
@@ -103,7 +103,7 @@ public class LevelService : ILevelService
             levelNoteExists.Text = request.Text;
             await this.levelRepository.UpdateLevelNote(levelNoteExists);
         }
-        return mapper.Map<LevelEntity, Level>(await this.levelRepository.GetLevel(request.LevelId, userId));
+        return mapper.Map<LevelEntity, Level>(await this.levelRepository.GetLevel(request.LevelId, userId.GetValueOrDefault()));
     }
 
     public async Task CompleteLevel(int levelId, IFormFile file)
@@ -114,7 +114,7 @@ public class LevelService : ILevelService
         {
             throw new BadHttpRequestException("Запрашиваемая карта не найдена");
         }
-        var levelCompletedExists = await this.levelRepository.GetCompletedLevel(levelId, userId);
+        var levelCompletedExists = await this.levelRepository.GetCompletedLevel(levelId, userId.GetValueOrDefault());
         if (levelCompletedExists != null)
         {
             await this.levelRepository.UnCompleteLevel(levelCompletedExists);
@@ -122,7 +122,7 @@ public class LevelService : ILevelService
         await this.levelRepository.CompleteLevel(new LevelCompletedEntity
         {
             LevelId = levelId,
-            UserId = userId,
+            UserId = userId.GetValueOrDefault(),
             Image = await this.storageService.Upload(file)
         });
     }
@@ -134,7 +134,7 @@ public class LevelService : ILevelService
         {
             throw new BadHttpRequestException("Запрашиваемая карта не найдена");
         }
-        var levelCompletedExists = await this.levelRepository.GetCompletedLevel(levelId, this.authService.GetAuthorizedUserId());
+        var levelCompletedExists = await this.levelRepository.GetCompletedLevel(levelId, this.authService.GetAuthorizedUserId().GetValueOrDefault());
         if (levelCompletedExists != null)
         {
             await this.levelRepository.UnCompleteLevel(levelCompletedExists);
@@ -149,14 +149,14 @@ public class LevelService : ILevelService
         {
             throw new BadHttpRequestException("Запрашиваемая карта не найдена");
         }
-        if (await this.levelRepository.GetFavoriteLevel(levelId, userId) != null)
+        if (await this.levelRepository.GetFavoriteLevel(levelId, userId.GetValueOrDefault()) != null)
         {
             return;
         }
         await this.levelRepository.FavoriteLevel(new LevelFavoriteEntity
         {
             LevelId = levelId,
-            UserId = userId
+            UserId = userId.GetValueOrDefault()
         });
     }
     
@@ -166,7 +166,7 @@ public class LevelService : ILevelService
         {
             throw new BadHttpRequestException("Запрашиваемая карта не найдена");
         }
-        var levelFavoriteExists = await this.levelRepository.GetFavoriteLevel(levelId, this.authService.GetAuthorizedUserId());
+        var levelFavoriteExists = await this.levelRepository.GetFavoriteLevel(levelId, this.authService.GetAuthorizedUserId().GetValueOrDefault());
         if (levelFavoriteExists != null)
         {
             await this.levelRepository.UnFavoriteLevel(levelFavoriteExists);

@@ -36,7 +36,7 @@ public class TipService : ITipService
     {
         return mapper.Map<TipEntity, Tip>(await this.tipRepository.CreateTip(new TipEntity
         {
-            UserId = this.authService.GetAuthorizedUserId(),
+            UserId = this.authService.GetAuthorizedUserId().GetValueOrDefault(),
             Title = request.Title,
             Text = request.Text,
         }));

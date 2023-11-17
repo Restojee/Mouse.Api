@@ -33,7 +33,7 @@ public class LevelCommentService : ILevelCommentService
     public async Task<LevelComment> CreateLevelComment(LevelCommentCreateRequest request)
     {
         var comment = mapper.Map<LevelCommentCreateRequest, LevelCommentEntity>(request);
-        comment.UserId = this.authService.GetAuthorizedUserId();
+        comment.UserId = this.authService.GetAuthorizedUserId().GetValueOrDefault();
         return mapper.Map<LevelCommentEntity, LevelComment>(await this.levelCommentRepository.CreateLevelComment(comment));
     }
 

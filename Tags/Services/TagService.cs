@@ -42,7 +42,7 @@ public class TagService : ITagService
         {
             Description = request.Description,
             Name = request.Name,
-            UserId = this.authService.GetAuthorizedUserId()
+            UserId = this.authService.GetAuthorizedUserId().GetValueOrDefault()
         };
         return mapper.Map<TagEntity, Tag>(await this.tagRepository.CreateTag(newTag));
     }

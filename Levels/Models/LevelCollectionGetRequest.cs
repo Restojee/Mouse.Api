@@ -8,9 +8,13 @@ public class LevelCollectionGetRequest : PaginateRequest
 
     public bool? IsFavorite { get; set; }
     
+    public bool? HasNote { get; set; }
+    
     public string? Name { get; set; }
     
     public long[]? TagIds { get; set; }
     
     public int? UserId { get; set; }
+
+    public bool? IsCreatedByUser { get; set; }
 }

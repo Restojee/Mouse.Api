@@ -13,5 +13,5 @@ public interface IAuthService
     
     public Task<Account> LoginAccount([FromBody] LoginAccountRequest loginAccountRequest);
 
-    public int GetAuthorizedUserId();
+    public int? GetAuthorizedUserId();
 }

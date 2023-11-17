@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Mouse.NET.Common;
 using Mouse.NET.Data;
 using Mouse.NET.Data.Models;
@@ -37,7 +38,7 @@ public class LevelRepository : ILevelRepository
                 Image = level.Image,
             });
 
-        if (request.UserId != null)
+        if (request.UserId != null && request.IsCreatedByUser.GetValueOrDefault())
         {
             query = LevelRepositoryFilters.GetFilterByUserQuery(query, request.UserId.GetValueOrDefault());
         }
@@ -49,7 +50,12 @@ public class LevelRepository : ILevelRepository
         
         if (request.IsFavorite != null)
         {
-            query = LevelRepositoryFilters.GetFilterByFavoriteQuery(this.context, query, request.UserId.GetValueOrDefault(), request.IsFavorite.GetValueOrDefault());
+            query = LevelRepositoryFilters.GetFilterByFavoriteQuery(this.context, query, request.UserId.GetValueOrDefault());
+        }
+        
+        if (request.HasNote != null)
+        {
+            query = LevelRepositoryFilters.GetFilterByNoteQuery(this.context, query, request.UserId.GetValueOrDefault());
         }
         
         if (request.TagIds != null)
@@ -62,7 +68,7 @@ public class LevelRepository : ILevelRepository
             query = LevelRepositoryFilters.GetFilterByName(query, request.Name);
         }
 
-        var levels = await PaginationExtensions.ToPagedResult(query, request.Page, request.Size);
+        var levels = await PaginationExtensions.ToPagedResult(query.OrderByDescending(level => level.CreatedUtcDate), request.Page, request.Size);
 
         return levels;
     }
@@ -70,6 +76,8 @@ public class LevelRepository : ILevelRepository
     public async Task<LevelEntity?> GetLevel(int levelId, int? userId = null)
     {
         return await this.context.Levels
+            .Include(level => level.Completed)
+            .ThenInclude(completed => completed.User)
             .Select(level => new LevelEntity
             {
                 Id = level.Id,
@@ -79,6 +87,7 @@ public class LevelRepository : ILevelRepository
                 Tags = level.Tags,
                 CreatedUtcDate = level.CreatedUtcDate,
                 ModifiedUtcDate = level.ModifiedUtcDate,
+                Completed = level.Completed,
                 Notes = level.Notes.Where(note => note.User.Id == userId.GetValueOrDefault()).ToList(),
                 CompletedCount = level.Completed.Select(c => c.Id).ToList().Count,
                 VisitsCount = level.Visits.Select(v => v.Id).ToList().Count,
@@ -125,8 +134,7 @@ public class LevelRepository : ILevelRepository
         await ClearLevelTags(level.Id);
         foreach (var tagId in tagIds)
         {
-            var tagExists = await this.context.Tags.Where(tag => tag.Id == tagId).FirstOrDefaultAsync();
-            if (tagExists != null)
+            if (await this.context.Tags.Where(tag => tag.Id == tagId).FirstOrDefaultAsync() != null)
             {
                 await this.context.LevelTagRelations.AddAsync(new LevelTagRelation { TagId = tagId, LevelId = level.Id });
             }
@@ -180,12 +188,12 @@ public class LevelRepository : ILevelRepository
     
     public async Task<LevelFavoriteEntity?> GetFavoriteLevel(int levelId, int userId)
     {
-        return await this.context.LevelFavorites.Where(favorite => favorite.LevelId == levelId && favorite.UserId == userId).FirstOrDefaultAsync();
+        return await this.context.LevelFavorites.Where(favorite => favorite.Level.Id == levelId && favorite.User.Id == userId).FirstOrDefaultAsync();
     }
     
     public async Task<LevelCompletedEntity?> GetCompletedLevel(int levelId, int userId)
     {
-        return await this.context.LevelCompleted.Where(favorite => favorite.LevelId == levelId && favorite.UserId == userId).FirstOrDefaultAsync();
+        return await this.context.LevelCompleted.Where(completed => completed.Level.Id == levelId && completed.User.Id == userId).FirstOrDefaultAsync();
     }
     
     public async Task CreateLevelVisit(LevelVisitEntity visit)

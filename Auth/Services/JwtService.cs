@@ -11,13 +11,13 @@ public class JwtService
         this.httpContextAccessor = httpContextAccessor;
     }
 
-    public int GetUserId()
+    public int? GetUserId()
     {
         var userIdClaim = this.httpContextAccessor.HttpContext.User.FindFirst(UserDetails.Id);
         if (userIdClaim != null)
         {
             return int.Parse(userIdClaim.Value);
         }
-        return 0;
+        return null;
     }
 }

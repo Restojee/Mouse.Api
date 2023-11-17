@@ -20,17 +20,15 @@ public class AuthService: IAuthService
         this.mapper = mapper;
         this.jwtService = jwtService;
         this.usersRepository = usersRepository;
-
     }
 
-    public int GetAuthorizedUserId()
+    public int? GetAuthorizedUserId()
     {
         return this.jwtService.GetUserId();
     }
     
     public async Task<Account> RegisterAccount (RegisterAccountRequest registerAccountRequest)
     {
-   
         var userExists = await this.usersRepository.GetUserByUserName(registerAccountRequest.UserName);
         if (userExists != null)
         {

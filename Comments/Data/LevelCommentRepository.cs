@@ -16,7 +16,11 @@ public class LevelCommentRepository : ILevelCommentRepository
     
     public async Task<ICollection<LevelCommentEntity>> GetLevelCommentCollection(int levelId)
     {
-        return await this.context.LevelComments.Where(level => level.Level.Id == levelId).Include(comment => comment.User).ToListAsync();
+        return await this.context.LevelComments
+            .Where(level => level.Level.Id == levelId)
+            .Include(comment => comment.User)
+            .OrderBy(level => level.CreatedUtcDate)
+            .ToListAsync();
     }
     
     public async Task<LevelCommentEntity?> GetLevelComment(int levelId)

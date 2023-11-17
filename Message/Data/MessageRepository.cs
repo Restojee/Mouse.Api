@@ -17,7 +17,9 @@ public class MessageRepository : IMessageRepository
     
     public async Task<MessageEntity?> GetMessage(int levelId)
     { 
-       return await this.context.Messages.Include(comment => comment.User).FirstOrDefaultAsync(level => level.Id.Equals(levelId));
+       return await this.context.Messages
+           .Include(message => message.User)
+           .FirstOrDefaultAsync(level => level.Id.Equals(levelId));
     }
 
     public async Task<MessageEntity?> CreateMessage(MessageEntity level)
@@ -44,7 +46,13 @@ public class MessageRepository : IMessageRepository
 
     public async Task<PagedResult<MessageEntity>> GetMessageCollection(PaginateRequest request)
     {
-        return await PaginationExtensions.ToPagedResult(this.context.Messages.AsQueryable(), request.Page, request.Size);
+        return await PaginationExtensions.ToPagedResult(this.context.Messages
+            .Include(message => message.User)
+            .OrderByDescending(level => level.CreatedUtcDate)
+            .AsQueryable(),
+            request.Page,
+            request.Size
+        );
     }
 
 }

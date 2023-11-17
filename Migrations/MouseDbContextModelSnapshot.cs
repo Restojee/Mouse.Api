@@ -286,6 +286,16 @@ namespace Mouse.NET.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("CreatedUtcDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_utc_date");
+
+                    b.Property<DateTime?>("ModifiedUtcDate")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("modified_utc_date");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text")
