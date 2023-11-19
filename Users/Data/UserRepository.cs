@@ -37,18 +37,24 @@ public class UserRepository : IUserRepository
     
     public async Task<UserEntity?> GetUser(int userId)
     { 
-       return await this.context.Users.Select(user => new UserEntity()
-       {
-           Id = user.Id,
-           UserName = user.UserName,
-           Avatar = user.Avatar,
-           CompletedCount = user.Completed.Select(c => c.Id).ToList().Count,
-           FavoritesCount = user.Favorites.Select(f => f.Id).ToList().Count,
-           LevelsCount = user.Levels.Select(l => l.Id).ToList().Count,
-           CommentsCount = user.Comments.Select(c => c.Id).ToList().Count,
-           CreatedUtcDate = user.CreatedUtcDate,
-           ModifiedUtcDate = user.ModifiedUtcDate,
-       }).FirstOrDefaultAsync(user => user.Id.Equals(userId));
+       return await this.context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+    }
+
+    public async Task<UserEntity?> GetUserWithStatistic(int userId)
+    {
+        return await this.context.Users.Select(user => new UserEntity()
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            Avatar = user.Avatar,
+            CompletedCount = user.Completed.Select(c => c.Id).ToList().Count,
+            FavoritesCount = user.Favorites.Select(f => f.Id).ToList().Count,
+            LevelsCount = user.Levels.Select(l => l.Id).ToList().Count,
+            CommentsCount = user.Comments.Select(c => c.Id).ToList().Count,
+            CreatedUtcDate = user.CreatedUtcDate,
+            ModifiedUtcDate = user.ModifiedUtcDate,
+        }).FirstOrDefaultAsync(user => user.Id.Equals(userId));
+
     }
     
     public async Task<UserEntity?> GetUserByUserName(string userName)

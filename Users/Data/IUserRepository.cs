@@ -10,6 +10,8 @@ namespace Mouse.NET.Users.Data
         
         public Task<UserEntity> GetUser(int userId);
         
+        public Task<UserEntity> GetUserWithStatistic(int userId);
+        
         public Task<UserEntity> GetUserByUserName(string userName);
         
         public Task<UserEntity> CreateUser(UserEntity user);
