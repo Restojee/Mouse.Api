@@ -7,7 +7,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Mouse.NET.csproj", "./"]
 RUN dotnet restore "Mouse.NET.csproj"
-RUN dotnet tool install --global dotnet-ef
+RUN dotnet tool install --global dotnet-ef --version 7.0.0
 COPY . .
 WORKDIR "/src/"
 RUN dotnet build "Mouse.NET.csproj" -c Release -o /app/build
