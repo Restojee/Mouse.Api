@@ -64,7 +64,7 @@ public class LevelController : ControllerBase
     [Authorize]
     public async Task<string> CompleteLevel([FromRoute] int levelId, IFormFile formFile)
     {
-        await this.levelService.CompleteLevel(levelId, formFile);
+        await this.levelService.CompleteLevel(levelId, formFile, "");
         return "Ok";
     }
     

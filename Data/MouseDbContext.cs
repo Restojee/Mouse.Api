@@ -28,6 +28,8 @@ public class MouseDbContext : DbContext
     public DbSet<MessageEntity> Messages { get; set; }
     
     public DbSet<LevelNoteEntity> LevelNotes { get; set; }
+    
+    public DbSet<InviteEntity> Invites { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

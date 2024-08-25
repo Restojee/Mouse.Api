@@ -11,6 +11,8 @@ using Mouse.NET.Auth.Services;
 using Mouse.NET.Common;
 using Mouse.NET.Data;
 using Mouse.NET.Data.Models;
+using Mouse.NET.Invites.Data;
+using Mouse.NET.Invites.Services;
 using Mouse.NET.LevelComments.Data;
 using Mouse.NET.LevelComments.services;
 using Mouse.NET.Levels.Data;
@@ -135,5 +137,7 @@ namespace Mouse.NET;
             services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IInviteService, InviteService>();
+            services.AddScoped<IInviteRepository, InviteRepository>();
         }
     }

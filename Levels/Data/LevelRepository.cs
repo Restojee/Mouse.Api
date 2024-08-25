@@ -20,6 +20,7 @@ public class LevelRepository : ILevelRepository
     {
         var userId = request.UserId.GetValueOrDefault();
         var query = this.context.Levels
+            .AsNoTracking()
             .Select(level => new LevelEntity
             {
                 Id = level.Id,
@@ -27,10 +28,10 @@ public class LevelRepository : ILevelRepository
                 Name = level.Name,
                 User = level.User,
                 Tags = level.Tags,
-                CompletedCount = level.Completed.Select(c => c.Id).ToList().Count,
-                VisitsCount = level.Visits.Select(v => v.Id).ToList().Count,
-                FavoritesCount = level.Favorites.Select(f => f.Id).ToList().Count,
-                CommentsCount = level.Comments.Select(c => c.Id).ToList().Count,
+                CompletedCount = level.Completed.Count,
+                VisitsCount = level.Visits.Count,
+                FavoritesCount = level.Favorites.Count,
+                CommentsCount = level.Comments.Count,
                 CreatedUtcDate = level.CreatedUtcDate,
                 ModifiedUtcDate = level.ModifiedUtcDate,
                 IsCompletedByUser = level.Completed.Select(c => c.User.Id).Any(user => user == userId),
@@ -76,6 +77,7 @@ public class LevelRepository : ILevelRepository
     public async Task<LevelEntity?> GetLevel(int levelId, int? userId = null)
     {
         return await this.context.Levels
+            .AsNoTracking()
             .Include(level => level.Completed)
             .ThenInclude(completed => completed.User)
             .Select(level => new LevelEntity

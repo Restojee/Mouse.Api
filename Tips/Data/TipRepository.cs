@@ -16,33 +16,38 @@ public class TipRepository : ITipRepository
     
     public async Task<PagedResult<TipEntity>> GetTipCollection(PaginateRequest request)
     {
-        return await PaginationExtensions.ToPagedResult(this.context.Tips.Include(tip => tip.User), request.Page, request.Size);
+        return await PaginationExtensions.ToPagedResult(
+            this.context.Tips
+                .Include(tip => tip.User)
+                .OrderBy(tip => tip.CreatedUtcDate)
+                .AsQueryable(),
+            request.Page, request.Size);
     }
     
-    public async Task<TipEntity?> GetTip(int levelId)
+    public async Task<TipEntity?> GetTip(int tipId)
     { 
-       return await this.context.Tips.Include(tip => tip.User).FirstOrDefaultAsync(level => level.Id.Equals(levelId));
+       return await this.context.Tips.Include(tip => tip.User).FirstOrDefaultAsync(level => level.Id.Equals(tipId));
     }
 
-    public async Task<TipEntity?> CreateTip(TipEntity level)
+    public async Task<TipEntity?> CreateTip(TipEntity tip)
     {
-        await this.context.Tips.AddAsync(level);
+        await this.context.Tips.AddAsync(tip);
         await this.context.SaveChangesAsync();
         
-        return await this.GetTip(level.Id);
+        return await this.GetTip(tip.Id);
     }
 
-    public async Task<TipEntity?> UpdateTip(TipEntity level)
+    public async Task<TipEntity?> UpdateTip(TipEntity tip)
     {
-        this.context.Entry(level).State = EntityState.Modified;
+        this.context.Entry(tip).State = EntityState.Modified;
         await this.context.SaveChangesAsync();
         
-        return await this.GetTip(level.Id);
+        return await this.GetTip(tip.Id);
     }
 
-    public async Task DeleteTip(TipEntity level)
+    public async Task DeleteTip(TipEntity tip)
     {
-        this.context.Tips.Remove(level);
+        this.context.Tips.Remove(tip);
         await this.context.SaveChangesAsync();
     }
 

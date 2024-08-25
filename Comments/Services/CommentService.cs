@@ -20,7 +20,7 @@ public class LevelCommentService : ILevelCommentService
         this.authService = authService;
     }
     
-    public async Task<ICollection<LevelComment>> GetLevelCommentCollection(int levelId)
+    public async Task<ICollection<LevelComment>> GetLevelCommentCollection(int? levelId)
     {
         return mapper.Map<ICollection<LevelCommentEntity>, ICollection<LevelComment>>(await this.levelCommentRepository.GetLevelCommentCollection(levelId));
     }

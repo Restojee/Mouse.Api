@@ -14,10 +14,14 @@ public class LevelCommentRepository : ILevelCommentRepository
         this.context = context;
     }
     
-    public async Task<ICollection<LevelCommentEntity>> GetLevelCommentCollection(int levelId)
+    public async Task<ICollection<LevelCommentEntity>> GetLevelCommentCollection(int? levelId)
     {
-        return await this.context.LevelComments
-            .Where(level => level.Level.Id == levelId)
+        var commentsQuery = this.context.LevelComments.AsQueryable();
+        if (levelId != null)
+        {
+            commentsQuery = commentsQuery.Where(level => level.Level.Id == levelId);
+        }
+        return await commentsQuery
             .Include(comment => comment.User)
             .OrderBy(level => level.CreatedUtcDate)
             .ToListAsync();

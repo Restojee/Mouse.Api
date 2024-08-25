@@ -11,7 +11,9 @@ public interface IAuthService
 {
     public Task<Account> RegisterAccount(RegisterAccountRequest registerAccountRequest);
     
-    public Task<Account> LoginAccount([FromBody] LoginAccountRequest loginAccountRequest);
+    public Task<Account> LoginAccount(LoginAccountRequest loginAccountRequest);
+
+    public Task ChangePassword(ChangePasswordAccountRequest changePasswordAccountRequest);
 
     public int? GetAuthorizedUserId();
 }

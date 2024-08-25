@@ -6,7 +6,7 @@ namespace Mouse.NET.LevelComments.Data
 {
     public interface ILevelCommentRepository
     {
-        public Task<ICollection<LevelCommentEntity>> GetLevelCommentCollection(int levelId);
+        public Task<ICollection<LevelCommentEntity>> GetLevelCommentCollection(int? levelId);
         
         public Task<LevelCommentEntity> GetLevelComment(int levelCommentId);
         

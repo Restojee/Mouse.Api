@@ -10,6 +10,8 @@ public class User : Auditable
     
     public string Username { get; set; }
     
+    public string? Email { get; set; }
+    
     public int LevelsCount { get; set; }
     
     public int CompletedCount { get; set; }

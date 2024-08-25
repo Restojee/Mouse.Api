@@ -26,6 +26,12 @@ namespace Mouse.Stick.Controllers.Auth
         {
             return await this.authService.LoginAccount(loginAccountRequest);
         }
+        
+        [HttpPost("change-password")]
+        public async Task ChangePassword([FromBody] ChangePasswordAccountRequest changePasswordAccountRequest)
+        {
+            await this.authService.ChangePassword(changePasswordAccountRequest);
+        }
             
     }
 }

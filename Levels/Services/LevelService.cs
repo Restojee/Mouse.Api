@@ -106,7 +106,7 @@ public class LevelService : ILevelService
         return mapper.Map<LevelEntity, Level>(await this.levelRepository.GetLevel(request.LevelId, userId.GetValueOrDefault()));
     }
 
-    public async Task CompleteLevel(int levelId, IFormFile file)
+    public async Task CompleteLevel(int levelId, IFormFile file, string description)
     {
         var userId = this.authService.GetAuthorizedUserId();
         var levelExists = await this.levelRepository.GetLevel(levelId);
@@ -114,13 +114,16 @@ public class LevelService : ILevelService
         {
             throw new BadHttpRequestException("Запрашиваемая карта не найдена");
         }
+        
         var levelCompletedExists = await this.levelRepository.GetCompletedLevel(levelId, userId.GetValueOrDefault());
         if (levelCompletedExists != null)
         {
             await this.levelRepository.UnCompleteLevel(levelCompletedExists);
         }
+        
         await this.levelRepository.CompleteLevel(new LevelCompletedEntity
         {
+            Description = description,
             LevelId = levelId,
             UserId = userId.GetValueOrDefault(),
             Image = await this.storageService.Upload(file)

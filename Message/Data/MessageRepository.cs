@@ -48,7 +48,7 @@ public class MessageRepository : IMessageRepository
     {
         return await PaginationExtensions.ToPagedResult(this.context.Messages
             .Include(message => message.User)
-            .OrderByDescending(level => level.CreatedUtcDate)
+            .OrderBy(level => level.CreatedUtcDate)
             .AsQueryable(),
             request.Page,
             request.Size
