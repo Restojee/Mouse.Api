@@ -24,7 +24,7 @@ services:
     working_dir: "/minio-image/storage"
     volumes:
       - ./Storage/minio/storage:/minio-image/storage
-    command: server /minio-image/storage --console-address :9031
+    command: server /minio-image/storage --console-address :9001
     networks:
       - app
 networks:

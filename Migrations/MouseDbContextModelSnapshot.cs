@@ -196,6 +196,10 @@ namespace Mouse.NET.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_utc_date");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("text");
