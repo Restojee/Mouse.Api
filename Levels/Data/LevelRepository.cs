@@ -67,6 +67,11 @@ public class LevelRepository : ILevelRepository
         {
             query = LevelRepositoryFilters.GetFilterByName(query, request.Name);
         }
+                
+        if (request.IsWithComment != null)
+        {
+            query = LevelRepositoryFilters.GetFilterByCommentQuery(this.context, query, request.UserId.GetValueOrDefault());
+        }
 
         var levels = await PaginationExtensions.ToPagedResult(query.OrderByDescending(level => level.CreatedUtcDate), request.Page, request.Size);
 
@@ -78,6 +83,7 @@ public class LevelRepository : ILevelRepository
         return await this.context.Levels
             .Include(level => level.User)
             .Include(level => level.Completed)
+            .Include(level => level.Comments)
             .ThenInclude(completed => completed.User)
             .Select(level => new LevelEntity
             {

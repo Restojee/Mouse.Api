@@ -17,4 +17,6 @@ public class LevelCollectionGetRequest : PaginateRequest
     public int? UserId { get; set; }
 
     public bool? IsCreatedByUser { get; set; }
+    
+    public bool? IsWithComment { get; set; }
 }

@@ -29,6 +29,11 @@ public static class LevelRepositoryFilters
         return query.Where(level => context.LevelFavorites.Any(favorite => favorite.User.Id == userId && favorite.Level.Id == level.Id));
     }
     
+    
+    public static IQueryable<LevelEntity> GetFilterByCommentQuery(MouseDbContext context, IQueryable<LevelEntity> query, int userId)
+    {
+        return query.Where(level => context.LevelComments.Any(comment => comment.User.Id == userId && comment.Level.Id == level.Id));
+    }
     public static IQueryable<LevelEntity> GetFilterByTags(IQueryable<LevelEntity> query, long[] tagIds)
     {
         foreach (int tagId in tagIds)
