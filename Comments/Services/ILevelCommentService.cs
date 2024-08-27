@@ -5,7 +5,7 @@ namespace Mouse.NET.LevelComments.services;
 
 public interface ILevelCommentService
 {
-    public Task<ICollection<LevelComment>> GetLevelCommentCollection(int? levelId);
+    public Task<ICollection<LevelComment>> GetLevelCommentCollection(int? levelI, int? userId);
 
     public Task<LevelComment> GetLevelComment(int levelCommentId);
 

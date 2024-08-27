@@ -17,10 +17,10 @@ public class LevelCommentController : ControllerBase
         this.levelCommentService = levelCommentService;
     }
 
-    [HttpGet("by-level/{levelId}")]
-    public async Task<ICollection<LevelComment>> GetLevelCommentCollection([FromRoute] int levelId)
+    [HttpGet("collect")]
+    public async Task<ICollection<LevelComment>> GetLevelCommentCollection([FromQuery] LevelCommentCollectRequest request)
     {
-        return await this.levelCommentService.GetLevelCommentCollection(levelId);
+        return await this.levelCommentService.GetLevelCommentCollection(request.levelId, request.userId);
     }
 
     [HttpGet("by-one/{levelCommentId}")]

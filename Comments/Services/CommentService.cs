@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Mouse.NET.Auth.Services;
 using Mouse.NET.Data.Models;
 using Mouse.NET.LevelComments.Data;
 using Mouse.NET.LevelComments.Models;
@@ -20,9 +19,9 @@ public class LevelCommentService : ILevelCommentService
         this.authService = authService;
     }
     
-    public async Task<ICollection<LevelComment>> GetLevelCommentCollection(int? levelId)
+    public async Task<ICollection<LevelComment>> GetLevelCommentCollection(int? levelId, int? userId)
     {
-        return mapper.Map<ICollection<LevelCommentEntity>, ICollection<LevelComment>>(await this.levelCommentRepository.GetLevelCommentCollection(levelId));
+        return mapper.Map<ICollection<LevelCommentEntity>, ICollection<LevelComment>>(await this.levelCommentRepository.GetLevelCommentCollection(levelId, userId));
     }
 
     public async Task<LevelComment> GetLevelComment(int levelCommentId)
