@@ -83,8 +83,8 @@ public class LevelRepository : ILevelRepository
         return await this.context.Levels
             .Include(level => level.User)
             .Include(level => level.Completed)
-            .Include(level => level.Comments)
             .ThenInclude(completed => completed.User)
+            .Include(level => level.Comments)
             .Select(level => new LevelEntity
             {
                 Id = level.Id,
