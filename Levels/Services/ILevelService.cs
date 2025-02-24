@@ -22,7 +22,7 @@ public interface ILevelService
 
     public Task CompleteLevel(int levelId, IFormFile file, string? description);
 
-    public Task UnCompleteLevel(int levelId);
+    public Task UnCompleteLevel(int completedId);
 
     public Task FavoriteLevel(int levelId);
 

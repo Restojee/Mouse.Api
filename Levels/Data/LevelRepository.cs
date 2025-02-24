@@ -198,9 +198,9 @@ public class LevelRepository : ILevelRepository
         return await this.context.LevelFavorites.Where(favorite => favorite.Level.Id == levelId && favorite.User.Id == userId).FirstOrDefaultAsync();
     }
     
-    public async Task<LevelCompletedEntity?> GetCompletedLevel(int levelId, int userId)
+    public async Task<LevelCompletedEntity?> GetCompletedLevel(int completedId, int userId)
     {
-        return await this.context.LevelCompleted.Where(completed => completed.Level.Id == levelId && completed.User.Id == userId).FirstOrDefaultAsync();
+        return await this.context.LevelCompleted.Where(completed => completed.Id == completedId && completed.User.Id == userId).FirstOrDefaultAsync();
     }
     
     public async Task CreateLevelVisit(LevelVisitEntity visit)

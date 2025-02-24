@@ -28,7 +28,7 @@ namespace Mouse.NET.Levels.Data
 
         public Task<LevelFavoriteEntity?> GetFavoriteLevel(int levelId, int userId);
 
-        public Task<LevelCompletedEntity?> GetCompletedLevel(int levelId, int userId);
+        public Task<LevelCompletedEntity?> GetCompletedLevel(int completedId, int userId);
 
         public Task<LevelNoteEntity?> GetLevelNote(int levelId, int userId);
 

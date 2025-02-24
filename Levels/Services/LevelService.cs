@@ -115,11 +115,11 @@ public class LevelService : ILevelService
             throw new BadHttpRequestException("Запрашиваемая карта не найдена");
         }
         
-        var levelCompletedExists = await this.levelRepository.GetCompletedLevel(levelId, userId.GetValueOrDefault());
-        if (levelCompletedExists != null)
-        {
-            await this.levelRepository.UnCompleteLevel(levelCompletedExists);
-        }
+        // var levelCompletedExists = await this.levelRepository.GetCompletedLevel(levelId, userId.GetValueOrDefault());
+        // if (levelCompletedExists != null)
+        // {
+        //     await this.levelRepository.UnCompleteLevel(levelCompletedExists);
+        // }
         
         await this.levelRepository.CompleteLevel(new LevelCompletedEntity
         {
@@ -130,14 +130,13 @@ public class LevelService : ILevelService
         });
     }
     
-    public async Task UnCompleteLevel(int levelId)
+    public async Task UnCompleteLevel(int completedId)
     {
-        var levelExists = await this.levelRepository.GetLevel(levelId);
-        if (levelExists == null)
+        var levelCompletedExists = await this.levelRepository.GetCompletedLevel(completedId, this.authService.GetAuthorizedUserId().GetValueOrDefault());
+        if (levelCompletedExists == null)
         {
-            throw new BadHttpRequestException("Запрашиваемая карта не найдена");
+            throw new BadHttpRequestException("Запрашиваемое прохождение не найдено");
         }
-        var levelCompletedExists = await this.levelRepository.GetCompletedLevel(levelId, this.authService.GetAuthorizedUserId().GetValueOrDefault());
         if (levelCompletedExists != null)
         {
             await this.levelRepository.UnCompleteLevel(levelCompletedExists);

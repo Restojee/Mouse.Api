@@ -4,8 +4,9 @@ using Mouse.NET.Users.Models;
 namespace Mouse.NET.Levels.dto;
 
 public class LevelCompleted: Auditable
-
 {
+    public int Id { get; set; }
+    
     public User User { get; set; }
     
     public string Image { get; set; }

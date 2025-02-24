@@ -68,11 +68,11 @@ public class LevelController : ControllerBase
         return "Ok";
     }
     
-    [HttpDelete("{levelId}/completed/remove")]
+    [HttpDelete("{levelId}/completed/{completedId}/remove")]
     [Authorize]
-    public async Task<string> UnCompleteLevel([FromRoute] int levelId)
+    public async Task<string> UnCompleteLevel([FromRoute] int completedId)
     {
-        await this.levelService.UnCompleteLevel(levelId);
+        await this.levelService.UnCompleteLevel(completedId);
         return "Ok";
     }
     
