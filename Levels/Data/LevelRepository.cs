@@ -169,10 +169,11 @@ public class LevelRepository : ILevelRepository
         await this.context.SaveChangesAsync();
     }
     
-    public async Task CompleteLevel(LevelCompletedEntity completed)
+    public async Task<LevelCompletedEntity?> CompleteLevel(LevelCompletedEntity completed)
     {
         await this.context.LevelCompleted.AddAsync(completed);
         await this.context.SaveChangesAsync();
+        return await this.GetCompletedLevel(completed.Id, completed.UserId);
     }
     
     public async Task UnCompleteLevel(LevelCompletedEntity completed)

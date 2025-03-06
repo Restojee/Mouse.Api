@@ -18,7 +18,7 @@ namespace Mouse.NET.Levels.Data
 
         public Task<LevelEntity> SetLevelTags(LevelEntity level, ICollection<int> tagIds);
 
-        public Task CompleteLevel(LevelCompletedEntity completed);
+        public Task<LevelCompletedEntity?> CompleteLevel(LevelCompletedEntity completed);
 
         public Task UnCompleteLevel(LevelCompletedEntity completed);
 

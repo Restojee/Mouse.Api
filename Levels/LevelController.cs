@@ -62,10 +62,9 @@ public class LevelController : ControllerBase
     
     [HttpPost("{levelId}/completed/create")]
     [Authorize]
-    public async Task<string> CompleteLevel([FromRoute] int levelId, IFormFile formFile)
+    public async Task<LevelCompleted> CompleteLevel([FromRoute] int levelId, IFormFile formFile)
     {
-        await this.levelService.CompleteLevel(levelId, formFile, "");
-        return "Ok";
+        return await this.levelService.CompleteLevel(levelId, formFile, "");
     }
     
     [HttpDelete("{levelId}/completed/{completedId}/remove")]

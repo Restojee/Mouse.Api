@@ -20,7 +20,7 @@ public interface ILevelService
 
     public Task<Level> SetLevelNote(LevelNoteSetRequest request);
 
-    public Task CompleteLevel(int levelId, IFormFile file, string? description);
+    public Task<LevelCompleted> CompleteLevel(int levelId, IFormFile file, string? description);
 
     public Task UnCompleteLevel(int completedId);
 
